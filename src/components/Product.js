@@ -1,4 +1,4 @@
-const Product = ({item,  setTotalPrice}) => {
+const Product = ({item, totalPrice,  setTotalPrice}) => {
 
     const projectDiv = {
         border: '1px solid',
@@ -7,12 +7,21 @@ const Product = ({item,  setTotalPrice}) => {
         textAlign: 'center'
     }
 
+    const imgStyle = {
+        height: '200px'
+    }
+
     const addItemToTheCard = (item) => {        
         setTotalPrice(state => state + item.price)
     }
 
-    const removeItemFromTheCard = (item) => {        
-        setTotalPrice(state => state - item.price)
+    const removeItemFromTheCard = (item) => { 
+        if(totalPrice <= 0) {
+            console.log(123);
+            setTotalPrice(state => state = 0);
+        } else {
+            setTotalPrice(state => state - item.price)
+        }       
     }
 
     return ( 
@@ -20,7 +29,7 @@ const Product = ({item,  setTotalPrice}) => {
             <h1>Brand: {item.brand}</h1>
             <p>Model: {item.title}</p>
             <div>
-                <img src={item.images[0]} alt="" />
+                <img style={imgStyle} src={item.images[0]} alt="" />
             </div>
             <p>Rating: {item.rating}</p>
             <p>Price: {item.price}</p>

@@ -53,6 +53,7 @@ const App = () => {
           <Product
             key={index}
             item={item}
+            totalPrice={totalPrice}
             setTotalPrice={setTotalPrice}
           />
         ))}
