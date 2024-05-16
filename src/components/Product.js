@@ -1,30 +1,60 @@
-const Product = ({item, totalPrice,  setTotalPrice}) => {
+import React from "react";
 
+const Product = ({ item, setAllItems, setTotalPrice }) => {
     const projectDiv = {
         border: '1px solid',
         width: '25%',
         boxSizing: 'border-box',
         textAlign: 'center'
-    }
+    };
 
     const imgStyle = {
         height: '200px'
-    }
+    };
 
-    const addItemToTheCard = (item) => {        
-        setTotalPrice(state => state + item.price)
-    }
+    const addItemToTheCard = (itemToAdd) => {
+        setAllItems((state) => {
+            const index = state.findIndex((existingItem) => {
+                return Array.isArray(existingItem) ? existingItem[0] === itemToAdd : existingItem === itemToAdd;
+            });
+            if (index !== -1) {
+                const newArray = [...state];
+                newArray[index] = Array.isArray(newArray[index]) ? [...newArray[index], itemToAdd] : [newArray[index], itemToAdd];
+                setTotalPrice(calculateTotalPrice(newArray));
+                return newArray;
+            } else {
+                const newState = [...state, [itemToAdd]];
+                setTotalPrice(calculateTotalPrice(newState));
+                return newState;
+            }
+        });
+    };
 
-    const removeItemFromTheCard = (item) => { 
-        if(totalPrice <= 0) {
-            console.log(123);
-            setTotalPrice(state => state = 0);
-        } else {
-            setTotalPrice(state => state - item.price)
-        }       
-    }
+    const removeItemFromTheCard = (itemToRemove) => {
+        setAllItems((state) => {
+            const updatedState = state.map((item) => {
+                if (Array.isArray(item)) {
+                    const updatedArray = item.filter((existingItem) => existingItem !== itemToRemove);
+                    return updatedArray.length === 0 ? null : updatedArray;
+                }
+                return item !== itemToRemove ? item : null;
+            }).filter(Boolean);
 
-    return ( 
+            setTotalPrice(calculateTotalPrice(updatedState));
+            return updatedState;
+        });
+    };
+
+    const calculateTotalPrice = (items) => {
+        return items.reduce((total, itemOrArray) => {
+            if (Array.isArray(itemOrArray)) {
+                return total + itemOrArray.reduce((subTotal, item) => subTotal + item.price, 0);
+            }
+            return total + itemOrArray.price;
+        }, 0);
+    };
+
+    return (
         <div style={projectDiv}>
             <h1>Brand: {item.brand}</h1>
             <p>Model: {item.title}</p>
@@ -40,7 +70,7 @@ const Product = ({item, totalPrice,  setTotalPrice}) => {
                 <button onClick={() => removeItemFromTheCard(item)}>Remove Item</button>
             </div>
         </div>
-     );
-}
- 
+    );
+};
+
 export default Product;

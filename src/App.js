@@ -17,6 +17,7 @@ const App = () => {
 
   const [allData, setAllData] = useState([]);
   const [dataToRender, setDataToRender] = useState(8);
+  const [allItems, setAllItems] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
 
   useEffect(() => {
@@ -28,6 +29,11 @@ const App = () => {
         setAllData(dataToFirstRender);
       })
   }, [dataToRender]);
+  
+
+  useEffect(() => {
+    console.log(allItems);
+  }, [allItems])
 
   const handleLoadMoreItems = () => {
     setDataToRender(state => state + 8)
@@ -52,8 +58,8 @@ const App = () => {
         {allData.map((item, index) => (
           <Product
             key={index}
-            item={item}
-            totalPrice={totalPrice}
+            item={item}                 
+            setAllItems={setAllItems}
             setTotalPrice={setTotalPrice}
           />
         ))}
